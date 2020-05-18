@@ -1,0 +1,29 @@
+server:
+  port: 18084
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      routes:
+          #id唯一标识，可自定义
+        - id: xiaohong
+          #路由的服务地址 动态路由
+          uri: lb://provider
+          # 路由拦截的地址配置（断言）
+          predicates:
+            - Path=/**
+          filters:
+            # 请求地址添加路径前缀过滤器
+            - MyParam=name
+            # 去除路径前缀过滤器
+            #- StripPrefix=2
+      default-filters:
+        - AddResponseHeader=X-Response-Default-MyName,itheima
+
+eureka:
+  client:
+    fetch-registry: true #是否定期拉取服务列表信息
+    register-with-eureka: true #将自己注册到注册中心去
+    service-url:
+      defaultZone: http://localhost:7001/eureka
